@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class ShootingGame extends JFrame {
     //더블버퍼링에 필요
@@ -18,6 +20,8 @@ public class ShootingGame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
         setLayout(null);
+
+        addKeyListener(new KeyListener());
     }
 
     //버퍼 이미지 만들기 => 깜빡임 최소화
@@ -32,5 +36,16 @@ public class ShootingGame extends JFrame {
     public void screenDraw(Graphics g){
         g.drawImage(mainScreen, 0,0,null);
         this.repaint();
+    }
+
+    class KeyListener extends KeyAdapter{
+        @Override
+        public void keyPressed(KeyEvent e) {
+            switch (e.getKeyCode()){
+                case KeyEvent.VK_ESCAPE:
+                    System.exit(0);
+                    break;
+            }
+        }
     }
 }
