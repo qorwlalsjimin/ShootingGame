@@ -4,7 +4,7 @@ public class ShootingGame extends JFrame {
     public ShootingGame(){
         setTitle("Shooting Game");
         setUndecorated(true);
-        setSize(1280, 720);
+        setSize(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT);
         setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
