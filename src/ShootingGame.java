@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ShootingGame extends JFrame {
     //더블버퍼링에 필요
@@ -9,6 +11,10 @@ public class ShootingGame extends JFrame {
     private Graphics screenGraphic;
 
     private Image mainScreen = new ImageIcon("src/images/main_screen.png").getImage();
+    private Image loadingScreen = new ImageIcon("src/images/loading_screen.png").getImage();
+    private Image gameScreen = new ImageIcon("src/images/game_screen.png").getImage();
+
+    private boolean isMainScreen, isLoadingScreen, isGameScreen;
 
     public ShootingGame(){
         //게임 창 설정
@@ -21,7 +27,30 @@ public class ShootingGame extends JFrame {
         setVisible(true);
         setLayout(null);
 
+        init();
+    }
+
+    //초기화
+    private void init(){
+        isMainScreen = true;
+        isLoadingScreen = false;
+        isGameScreen = false;
         addKeyListener(new KeyListener());
+    }
+
+    private void gameStart(){
+        isMainScreen = false;
+        isLoadingScreen = true;
+
+        Timer loadingTimer = new Timer();
+        TimerTask loadingTask = new TimerTask() {
+            @Override
+            public void run() {
+                isLoadingScreen = false;
+                isGameScreen = true;
+            }
+        };
+        loadingTimer.schedule(loadingTask, 3000);
     }
 
     //버퍼 이미지 만들기 => 깜빡임 최소화
@@ -34,7 +63,15 @@ public class ShootingGame extends JFrame {
 
     //필요한 요소 그리기
     public void screenDraw(Graphics g){
-        g.drawImage(mainScreen, 0,0,null);
+        if(isMainScreen){
+            g.drawImage(mainScreen, 0,0,null);
+        }
+        if(isLoadingScreen){
+            g.drawImage(loadingScreen,0,0,null);
+        }
+        if(isGameScreen){
+            g.drawImage(gameScreen, 0, 0, null);
+        }
         this.repaint();
     }
 
@@ -42,9 +79,13 @@ public class ShootingGame extends JFrame {
         @Override
         public void keyPressed(KeyEvent e) {
             switch (e.getKeyCode()){
-                case KeyEvent.VK_ESCAPE:
-                    System.exit(0);
+                case KeyEvent.VK_ENTER:
+                    if(isMainScreen) gameStart();
                     break;
+                case KeyEvent.VK_ESCAPE: //ESC
+                    System.exit(0); //화면꺼짐
+                    break;
+
             }
         }
     }
