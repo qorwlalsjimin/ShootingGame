@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.SplittableRandom;
 
 public class Game extends Thread { //게임 진행
     private int delay = 20; //게임 딜레이
@@ -37,6 +38,15 @@ public class Game extends Thread { //게임 진행
                 }
             }
         }
+    }
+
+    //키 입력 처리
+    private void keyProcess(){
+        //playerX, playerY 값 조정
+        if(up && playerY - playerSpeed > 0) playerY -= playerSpeed;
+        if(down && playerY + playerHeight + playerSpeed < Main.SCREEN_HEIGHT) playerY += playerSpeed;
+        if(left && playerX - playerSpeed > 0) playerX -= playerSpeed;
+        if(right && playerX + playerWidth + playerSpeed < Main.SCREEN_WIDTH) playerX += playerSpeed;
     }
 
 }
