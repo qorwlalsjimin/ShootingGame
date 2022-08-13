@@ -32,6 +32,7 @@ public class Game extends Thread { //게임 진행
                 //차이만큼 Thread에 sleep 주기
                 try{
                     Thread.sleep(delay - System.currentTimeMillis() + pretime);
+                    keyProcess();
                     cnt++;
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -49,4 +50,29 @@ public class Game extends Thread { //게임 진행
         if(right && playerX + playerWidth + playerSpeed < Main.SCREEN_WIDTH) playerX += playerSpeed;
     }
 
+    //게임 안의 요소 그리기
+    public void gameDraw(Graphics g){
+        playerDraw(g);
+    }
+
+    //player에 관한 요소 그리기
+    public void playerDraw(Graphics g){
+        g.drawImage(player, playerX, playerY, null);
+    }
+
+    public void setUp(boolean up) {
+        this.up = up;
+    }
+
+    public void setDown(boolean down) {
+        this.down = down;
+    }
+
+    public void setLeft(boolean left) {
+        this.left = left;
+    }
+
+    public void setRight(boolean right) {
+        this.right = right;
+    }
 }

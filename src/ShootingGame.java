@@ -16,6 +16,8 @@ public class ShootingGame extends JFrame {
 
     private boolean isMainScreen, isLoadingScreen, isGameScreen;
 
+    public static Game game = new Game();
+
     public ShootingGame(){
         //게임 창 설정
         setTitle("Shooting Game");
@@ -51,6 +53,8 @@ public class ShootingGame extends JFrame {
             }
         };
         loadingTimer.schedule(loadingTask, 3000);
+
+        game.start();
     }
 
     //버퍼 이미지 만들기 => 깜빡임 최소화
@@ -71,6 +75,7 @@ public class ShootingGame extends JFrame {
         }
         if(isGameScreen){
             g.drawImage(gameScreen, 0, 0, null);
+            game.gameDraw(g);
         }
         this.repaint();
     }
@@ -79,6 +84,18 @@ public class ShootingGame extends JFrame {
         @Override
         public void keyPressed(KeyEvent e) {
             switch (e.getKeyCode()){
+                case KeyEvent.VK_W:
+                    game.setUp(true);
+                    break;
+                case KeyEvent.VK_S:
+                    game.setDown(true);
+                    break;
+                case KeyEvent.VK_A:
+                    game.setLeft(true);
+                    break;
+                case KeyEvent.VK_D:
+                    game.setRight(true);
+                    break;
                 case KeyEvent.VK_ENTER:
                     if(isMainScreen) gameStart();
                     break;
@@ -86,6 +103,22 @@ public class ShootingGame extends JFrame {
                     System.exit(0); //화면꺼짐
                     break;
 
+            }
+        }
+        public void keyReleased(KeyEvent e) {
+            switch (e.getKeyCode()){
+                case KeyEvent.VK_W:
+                    game.setUp(false);
+                    break;
+                case KeyEvent.VK_S:
+                    game.setDown(false);
+                    break;
+                case KeyEvent.VK_A:
+                    game.setLeft(false);
+                    break;
+                case KeyEvent.VK_D:
+                    game.setRight(false);
+                    break;
             }
         }
     }
