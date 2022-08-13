@@ -96,6 +96,9 @@ public class ShootingGame extends JFrame {
                 case KeyEvent.VK_D:
                     game.setRight(true);
                     break;
+                case KeyEvent.VK_SPACE:
+                    game.setShooting(true);
+                    break;
                 case KeyEvent.VK_ENTER:
                     if(isMainScreen) gameStart();
                     break;
@@ -118,6 +121,9 @@ public class ShootingGame extends JFrame {
                     break;
                 case KeyEvent.VK_D:
                     game.setRight(false);
+                    break;
+                case KeyEvent.VK_SPACE:
+                    game.setShooting(false);
                     break;
             }
         }
