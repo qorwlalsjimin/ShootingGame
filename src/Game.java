@@ -8,6 +8,7 @@ public class Game extends Thread { //게임 진행
     //딜레이 카운트 => 이벤트 발생 주기를 컨트롤
     private long pretime;
     private int cnt;
+    private int score;
 
     //플레이어 관련 변수
     private Image player = new ImageIcon("src/images/player.png").getImage();
@@ -19,6 +20,7 @@ public class Game extends Thread { //게임 진행
     private int playerHp = 30;
 
     private boolean up, down, left, right; //플레이어의 움직임을 제어
+    private boolean isOver;
     private boolean shooting; //공격 발사 유무
 
     private ArrayList<PlayerAttack> playerAttackList = new ArrayList<PlayerAttack>();
@@ -32,33 +34,50 @@ public class Game extends Thread { //게임 진행
 
     @Override
     public void run() {
-        cnt = 0;
-        playerX = 10;
-        playerY = (Main.SCREEN_HEIGHT - playerHeight) / 2;
-
         backgroundMusic = new Audio("src/audio/gameBGM.wav", true);
         hitSound = new Audio("src/audio/hitSound.wav", true);
 
-        backgroundMusic.start();
-
+        reset();
         while (true){
-            //delay 밀리초가 지날 때마다 cnt 증가
-            pretime = System.currentTimeMillis();
-            if(System.currentTimeMillis() - pretime < delay){ //현재 시간 - (cnt가 증가하기 전 시간) < delay
-                //차이만큼 Thread에 sleep 주기
-                try{
-                    Thread.sleep(delay - System.currentTimeMillis() + pretime);
-                    keyProcess();
-                    playerAttackProcess();
-                    enemyAppearProcess();
-                    enemyMoveProcess();
-                    enemyAttackProcess();
-                    cnt++;
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            while(!isOver){
+                //delay 밀리초가 지날 때마다 cnt 증가
+                pretime = System.currentTimeMillis();
+                if(System.currentTimeMillis() - pretime < delay){ //현재 시간 - (cnt가 증가하기 전 시간) < delay
+                    //차이만큼 Thread에 sleep 주기
+                    try{
+                        Thread.sleep(delay - System.currentTimeMillis() + pretime);
+                        keyProcess();
+                        playerAttackProcess();
+                        enemyAppearProcess();
+                        enemyMoveProcess();
+                        enemyAttackProcess();
+                        cnt++;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
+    }
+
+    //다시하기
+    public void reset(){
+        isOver = false;
+        cnt = 0;
+        score = 0;
+        playerX = 10;
+        playerY = (Main.SCREEN_HEIGHT - playerHeight) / 2;
+
+        backgroundMusic.start();
+
+        playerAttackList.clear();
+        enemyList.clear();
+        enemyAttackList.clear();
     }
 
     //키 입력 처리
@@ -90,6 +109,7 @@ public class Game extends Thread { //게임 진행
                 if(enemy.hp <= 0){
                     hitSound.start();
                     enemyList.remove(enemy);
+                    score += 1000;
                 }
             }
         }
@@ -126,7 +146,8 @@ public class Game extends Thread { //게임 진행
                 hitSound.start();
                 playerHp -= enemyAttack.attack;
                 enemyAttackList.remove(enemyAttack);
-                //게임 오버 hp 판정 여기서
+
+                if(playerHp <= 0) isOver = true;
             }
         }
     }
@@ -135,8 +156,20 @@ public class Game extends Thread { //게임 진행
     public void gameDraw(Graphics g){
         playerDraw(g);
         enemyDraw(g);
+        infoDraw(g);
     }
 
+    public void infoDraw(Graphics g){
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Arial", Font.BOLD, 40));
+        g.drawString("SCORE : "+score, 40, 80);
+
+        if(isOver){ //게임이 끝나면 R키를 눌러 재시작할 수 있다는 안내문
+            g.setColor(Color.BLACK);
+            g.setFont(new Font("Arial", Font.BOLD, 80));
+            g.drawString("PRESS R to restart", 295, 380);
+        }
+    }
     //player에 관한 요소 그리기
     public void playerDraw(Graphics g){
         g.drawImage(player, playerX, playerY, null);
@@ -163,6 +196,11 @@ public class Game extends Thread { //게임 진행
             g.drawImage(enemyAttack.image, enemyAttack.x, enemyAttack.y, null);
         }
     }
+
+    public boolean isOver() {
+        return isOver;
+    }
+
     public void setUp(boolean up) {
         this.up = up;
     }
