@@ -16,7 +16,7 @@ public class Game extends Thread { //게임 진행
     private int playerWidth = player.getWidth(null);
     private int playerHeight = player.getHeight(null);
     private int playerSpeed = 10; //키입력이 한 번 인식됐을 때 플레이어가 이동할 거리
-    private int playerUp = 30;
+    private int playerHp = 30;
 
     private boolean up, down, left, right; //플레이어의 움직임을 제어
     private boolean shooting; //공격 발사 유무
@@ -113,6 +113,12 @@ public class Game extends Thread { //게임 진행
         for(int i = 0; i<enemyAttackList.size(); i++){
             enemyAttack = enemyAttackList.get(i);
             enemyAttack.fire();
+
+            if(enemyAttack.x>playerX & enemyAttack.x < playerX + playerWidth && enemyAttack.y > playerY && enemyAttack.y < playerY + playerHeight){
+                playerHp -= enemyAttack.attack;
+                enemyAttackList.remove(enemyAttack);
+                //게임 오버 hp 판정 여기서
+            }
         }
     }
 
@@ -125,6 +131,8 @@ public class Game extends Thread { //게임 진행
     //player에 관한 요소 그리기
     public void playerDraw(Graphics g){
         g.drawImage(player, playerX, playerY, null);
+        g.setColor(Color.green);
+        g.fillRect(playerX-1, playerY-40, playerHp*6, 20);
         for(int i= 0; i<playerAttackList.size(); i++){
             playerAttack = playerAttackList.get(i);
             g.drawImage(playerAttack.image, playerAttack.x, playerAttack.y, null);
@@ -137,6 +145,8 @@ public class Game extends Thread { //게임 진행
         for(int i = 0; i<enemyList.size(); i++){
             enemy = enemyList.get(i);
             g.drawImage(enemy.image, enemy.x, enemy.y, null);
+            g.setColor(Color.GREEN);
+            g.fillRect(enemy.x+1, enemy.y-40, enemy.hp * 15, 20);
         }
         //적의 공격
         for(int i = 0; i<enemyAttackList.size(); i++){
