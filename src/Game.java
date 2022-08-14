@@ -72,6 +72,18 @@ public class Game extends Thread { //게임 진행
         for(int i= 0; i<playerAttackList.size(); i++){
             playerAttack = playerAttackList.get(i);
             playerAttack.fire();
+
+            //충돌 판정
+            for(int j = 0; j<enemyList.size(); j++){
+                enemy = enemyList.get(j);
+                if((playerAttack.x > enemy.x) && (playerAttack.x < enemy.x+enemy.width) && (playerAttack.y > enemy.y) && (playerAttack.y < enemy.y + enemy.height)){
+                    enemy.hp -= playerAttack.attack;
+                    playerAttackList.remove(playerAttack);
+                }
+                if(enemy.hp <= 0){
+                    enemyList.remove(enemy);
+                }
+            }
         }
     }
 
