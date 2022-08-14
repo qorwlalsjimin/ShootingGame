@@ -50,11 +50,10 @@ public class ShootingGame extends JFrame {
             public void run() {
                 isLoadingScreen = false;
                 isGameScreen = true;
+                game.start();
             }
         };
         loadingTimer.schedule(loadingTask, 3000);
-
-        game.start();
     }
 
     //버퍼 이미지 만들기 => 깜빡임 최소화
