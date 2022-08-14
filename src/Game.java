@@ -21,8 +21,12 @@ public class Game extends Thread { //게임 진행
     private boolean up, down, left, right; //플레이어의 움직임을 제어
     private boolean shooting; //공격 발사 유무
 
-    ArrayList<PlayerAttack> playerAttackList = new ArrayList<PlayerAttack>();
+    private ArrayList<PlayerAttack> playerAttackList = new ArrayList<PlayerAttack>();
+    private ArrayList<Enemy> enemyList = new ArrayList<Enemy>();
+    private ArrayList<EnemyAttack> enemyAttackList = new ArrayList<EnemyAttack>();
     private PlayerAttack playerAttack;
+    private Enemy enemy;
+    private EnemyAttack enemyAttack;
 
     @Override
     public void run() {
@@ -39,6 +43,8 @@ public class Game extends Thread { //게임 진행
                     Thread.sleep(delay - System.currentTimeMillis() + pretime);
                     keyProcess();
                     playerAttackProcess();
+                    enemyAppearProcess();
+                    enemyMoveProcess();
                     cnt++;
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -68,9 +74,26 @@ public class Game extends Thread { //게임 진행
         }
     }
 
+    //주기적ㅈ으로 적 출현
+    private  void enemyAppearProcess(){
+        if(cnt % 80 == 0){
+            enemy = new Enemy(1120, (int)(Math.random()*621));
+            enemyList.add(enemy);
+        }
+    }
+
+    //적 이동
+    private void enemyMoveProcess(){
+        for(int i = 0; i<enemyList.size(); i++){
+            enemy = enemyList.get(i);
+            enemy.move();
+        }
+    }
+
     //게임 안의 요소 그리기
     public void gameDraw(Graphics g){
         playerDraw(g);
+        enemyDraw(g);
     }
 
     //player에 관한 요소 그리기
@@ -82,6 +105,13 @@ public class Game extends Thread { //게임 진행
         }
     }
 
+    //적과 적의 공격을 그려줄 메서드
+    public void enemyDraw(Graphics g){
+        for(int i = 0; i<enemyList.size(); i++){
+            enemy = enemyList.get(i);
+            g.drawImage(enemy.image, enemy.x, enemy.y, null);
+        }
+    }
     public void setUp(boolean up) {
         this.up = up;
     }

@@ -80,6 +80,7 @@ public class ShootingGame extends JFrame {
         this.repaint();
     }
 
+    //키보드 입력 처리
     class KeyListener extends KeyAdapter{
         @Override
         public void keyPressed(KeyEvent e) {
