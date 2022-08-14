@@ -27,12 +27,19 @@ public class Game extends Thread { //게임 진행
     private PlayerAttack playerAttack;
     private Enemy enemy;
     private EnemyAttack enemyAttack;
+    private Audio backgroundMusic;
+    private Audio hitSound;
 
     @Override
     public void run() {
         cnt = 0;
         playerX = 10;
         playerY = (Main.SCREEN_HEIGHT - playerHeight) / 2;
+
+        backgroundMusic = new Audio("src/audio/gameBGM.wav", true);
+        hitSound = new Audio("src/audio/hitSound.wav", true);
+
+        backgroundMusic.start();
 
         while (true){
             //delay 밀리초가 지날 때마다 cnt 증가
@@ -81,6 +88,7 @@ public class Game extends Thread { //게임 진행
                     playerAttackList.remove(playerAttack);
                 }
                 if(enemy.hp <= 0){
+                    hitSound.start();
                     enemyList.remove(enemy);
                 }
             }
@@ -115,6 +123,7 @@ public class Game extends Thread { //게임 진행
             enemyAttack.fire();
 
             if(enemyAttack.x>playerX & enemyAttack.x < playerX + playerWidth && enemyAttack.y > playerY && enemyAttack.y < playerY + playerHeight){
+                hitSound.start();
                 playerHp -= enemyAttack.attack;
                 enemyAttackList.remove(enemyAttack);
                 //게임 오버 hp 판정 여기서

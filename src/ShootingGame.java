@@ -1,3 +1,5 @@
+import javafx.scene.layout.Background;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -17,6 +19,7 @@ public class ShootingGame extends JFrame {
     private boolean isMainScreen, isLoadingScreen, isGameScreen;
 
     public static Game game = new Game();
+    private Audio backgroundMusic;
 
     public ShootingGame(){
         //게임 창 설정
@@ -37,6 +40,10 @@ public class ShootingGame extends JFrame {
         isMainScreen = true;
         isLoadingScreen = false;
         isGameScreen = false;
+
+        backgroundMusic = new Audio("src/audio/menuBGM.wav", true);
+        backgroundMusic.start();
+
         addKeyListener(new KeyListener());
     }
 
@@ -48,6 +55,7 @@ public class ShootingGame extends JFrame {
         TimerTask loadingTask = new TimerTask() {
             @Override
             public void run() {
+                backgroundMusic.stop();
                 isLoadingScreen = false;
                 isGameScreen = true;
                 game.start();
