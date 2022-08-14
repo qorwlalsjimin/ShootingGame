@@ -45,6 +45,7 @@ public class Game extends Thread { //게임 진행
                     playerAttackProcess();
                     enemyAppearProcess();
                     enemyMoveProcess();
+                    enemyAttackProcess();
                     cnt++;
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -90,6 +91,19 @@ public class Game extends Thread { //게임 진행
         }
     }
 
+    private void enemyAttackProcess(){
+        if(cnt % 50 == 0){
+            enemyAttack = new EnemyAttack(enemy.x - 79, enemy.y + 35);
+            enemyAttackList.add(enemyAttack);
+        }
+
+        //ArrayList에 담긴 공격 하나하나에 접근해 fire 메서드 호출
+        for(int i = 0; i<enemyAttackList.size(); i++){
+            enemyAttack = enemyAttackList.get(i);
+            enemyAttack.fire();
+        }
+    }
+
     //게임 안의 요소 그리기
     public void gameDraw(Graphics g){
         playerDraw(g);
@@ -107,9 +121,15 @@ public class Game extends Thread { //게임 진행
 
     //적과 적의 공격을 그려줄 메서드
     public void enemyDraw(Graphics g){
+        //적
         for(int i = 0; i<enemyList.size(); i++){
             enemy = enemyList.get(i);
             g.drawImage(enemy.image, enemy.x, enemy.y, null);
+        }
+        //적의 공격
+        for(int i = 0; i<enemyAttackList.size(); i++){
+            enemyAttack = enemyAttackList.get(i);
+            g.drawImage(enemyAttack.image, enemyAttack.x, enemyAttack.y, null);
         }
     }
     public void setUp(boolean up) {
